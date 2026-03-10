@@ -1,0 +1,522 @@
+﻿<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2D Platform Fighter</title>
+  <style>
+    :root {
+      --bg: #0f1220;
+      --panel: #181d32;
+      --line: #2f3c68;
+      --text: #e9edff;
+      --muted: #9eaad0;
+      --accent: #7ec1ff;
+      --danger: #ff6d87;
+      --good: #8bffbe;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at top, #212949 0%, #12172b 58%, #0c1020 100%);
+      color: var(--text);
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      padding: 1rem;
+    }
+
+    .app {
+      width: min(980px, 96vw);
+      background: linear-gradient(165deg, #1a2140 0%, #131a32 100%);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .nav-link {
+      display: inline-block;
+      margin-bottom: 0.75rem;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .hud {
+      display: flex;
+      gap: 1rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+      flex-wrap: wrap;
+    }
+
+    .hud strong { color: var(--text); }
+
+    button {
+      border: 1px solid var(--line);
+      background: #1d284b;
+      color: var(--text);
+      padding: 0.45rem 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: var(--accent); }
+
+    canvas {
+      width: 100%;
+      max-width: 920px;
+      aspect-ratio: 16 / 9;
+      height: auto;
+      display: block;
+      border: 1px solid #374878;
+      border-radius: 10px;
+      background: #0a1023;
+    }
+
+    .hint {
+      margin: 0.75rem 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <a class="nav-link" href="./index.html">Back to Game Hub</a>
+
+    <div class="top">
+      <h1>2D Platform Fighter (Practice Dummy)</h1>
+      <div class="hud">
+        <span>Dummy Damage: <strong id="dummyDamage">0%</strong></span>
+        <span>Lives: <strong id="playerLives">3</strong></span>
+        <span>Status: <strong id="statusText">running</strong></span>
+      </div>
+      <button id="resetBtn" type="button">Reset Match</button>
+    </div>
+
+    <canvas id="game" width="960" height="540" aria-label="Platform fighter arena"></canvas>
+    <p class="hint">Move: A/D or Arrow Left/Right | Jump: W/ArrowUp/Space (Double Jump) | Attack: J</p>
+  </main>
+
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+    const dummyDamageEl = document.getElementById("dummyDamage");
+    const playerLivesEl = document.getElementById("playerLives");
+    const statusTextEl = document.getElementById("statusText");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const WORLD = {
+      gravity: 1700,
+      floorY: 500,
+      ringOutY: 620,
+      friction: 0.85,
+      maxSpeedX: 360,
+    };
+
+    const PLATFORM = {
+      x: 330,
+      y: 355,
+      width: 300,
+      height: 16,
+    };
+
+    const keys = {
+      left: false,
+      right: false,
+      jump: false,
+      attack: false,
+    };
+
+    const player = {
+      x: 260,
+      y: 430,
+      w: 42,
+      h: 70,
+      vx: 0,
+      vy: 0,
+      speed: 2200,
+      jumpPower: 690,
+      jumpsUsed: 0,
+      maxJumps: 2,
+      grounded: false,
+      facing: 1,
+      attackTimer: 0,
+      attackCooldown: 0,
+      canAttackHit: true,
+      lives: 3,
+    };
+
+    const dummy = {
+      x: 620,
+      y: 430,
+      w: 42,
+      h: 70,
+      vx: 0,
+      vy: 0,
+      grounded: false,
+      damage: 0,
+    };
+
+    let running = true;
+    let lastTime = 0;
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function rectsOverlap(a, b) {
+      return (
+        a.x < b.x + b.w &&
+        a.x + a.w > b.x &&
+        a.y < b.y + b.h &&
+        a.y + a.h > b.y
+      );
+    }
+
+    function getAttackHitbox() {
+      const width = 56;
+      const height = 30;
+      return {
+        x: player.facing === 1 ? player.x + player.w : player.x - width,
+        y: player.y + 20,
+        w: width,
+        h: height,
+      };
+    }
+
+    function applyMovement(entity, dt) {
+      entity.vy += WORLD.gravity * dt;
+      entity.x += entity.vx * dt;
+      entity.y += entity.vy * dt;
+    }
+
+    function resolveGroundAndPlatform(entity, allowJumpReset) {
+      entity.grounded = false;
+
+      if (
+        entity.vy >= 0 &&
+        entity.y + entity.h >= PLATFORM.y &&
+        entity.y + entity.h <= PLATFORM.y + 20 &&
+        entity.x + entity.w > PLATFORM.x &&
+        entity.x < PLATFORM.x + PLATFORM.width
+      ) {
+        entity.y = PLATFORM.y - entity.h;
+        entity.vy = 0;
+        entity.grounded = true;
+      }
+
+      if (entity.y + entity.h >= WORLD.floorY) {
+        entity.y = WORLD.floorY - entity.h;
+        entity.vy = 0;
+        entity.grounded = true;
+      }
+
+      if (allowJumpReset && entity.grounded) {
+        entity.jumpsUsed = 0;
+      }
+    }
+
+    function resetPositions() {
+      player.x = 260;
+      player.y = 430;
+      player.vx = 0;
+      player.vy = 0;
+      player.jumpsUsed = 0;
+      player.attackTimer = 0;
+      player.attackCooldown = 0;
+      player.canAttackHit = true;
+      player.facing = 1;
+
+      dummy.x = 620;
+      dummy.y = 430;
+      dummy.vx = 0;
+      dummy.vy = 0;
+    }
+
+    function resetMatch() {
+      player.lives = 3;
+      dummy.damage = 0;
+      running = true;
+      statusTextEl.textContent = "running";
+      resetPositions();
+      syncHud();
+    }
+
+    function ringOutCheck(entity, onRingOut) {
+      if (entity.y > WORLD.ringOutY) {
+        onRingOut();
+      }
+    }
+
+    function onDummyRingOut() {
+      dummy.damage = 0;
+      dummy.x = 620;
+      dummy.y = 430;
+      dummy.vx = 0;
+      dummy.vy = 0;
+    }
+
+    function onPlayerRingOut() {
+      player.lives -= 1;
+      if (player.lives <= 0) {
+        running = false;
+        statusTextEl.textContent = "defeat";
+        return;
+      }
+      player.x = 260;
+      player.y = 430;
+      player.vx = 0;
+      player.vy = 0;
+      player.jumpsUsed = 0;
+    }
+
+    function performAttackIfNeeded() {
+      if (!keys.attack || !running) {
+        return;
+      }
+      if (player.attackCooldown > 0 || player.attackTimer > 0) {
+        return;
+      }
+
+      player.attackTimer = 0.12;
+      player.attackCooldown = 0.28;
+      player.canAttackHit = true;
+    }
+
+    function handlePlayerInput(dt) {
+      const moveDir = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
+
+      if (moveDir !== 0) {
+        player.vx += moveDir * player.speed * dt;
+        player.facing = moveDir;
+      } else {
+        player.vx *= WORLD.friction;
+        if (Math.abs(player.vx) < 5) {
+          player.vx = 0;
+        }
+      }
+
+      player.vx = clamp(player.vx, -WORLD.maxSpeedX, WORLD.maxSpeedX);
+    }
+
+    function doJump() {
+      if (!running) {
+        return;
+      }
+      if (player.jumpsUsed >= player.maxJumps) {
+        return;
+      }
+
+      player.vy = -player.jumpPower;
+      player.jumpsUsed += 1;
+      player.grounded = false;
+    }
+
+    function applyDummyKnockback() {
+      const kbBase = 190;
+      const kbScale = 3.4;
+      const verticalBase = 220;
+      const power = kbBase + dummy.damage * kbScale;
+      const dir = player.facing;
+
+      dummy.vx = dir * power;
+      dummy.vy = -verticalBase - dummy.damage * 1.35;
+    }
+
+    function updateCombat(dt) {
+      if (player.attackTimer > 0) {
+        player.attackTimer -= dt;
+        const hitbox = getAttackHitbox();
+
+        if (player.canAttackHit && rectsOverlap(hitbox, dummy)) {
+          dummy.damage += 9;
+          applyDummyKnockback();
+          player.canAttackHit = false;
+        }
+      }
+
+      if (player.attackTimer <= 0) {
+        player.attackTimer = 0;
+      }
+
+      if (player.attackCooldown > 0) {
+        player.attackCooldown -= dt;
+      }
+      if (player.attackCooldown < 0) {
+        player.attackCooldown = 0;
+      }
+    }
+
+    function update(dt) {
+      if (!running) {
+        return;
+      }
+
+      handlePlayerInput(dt);
+      performAttackIfNeeded();
+      updateCombat(dt);
+
+      applyMovement(player, dt);
+      applyMovement(dummy, dt);
+
+      resolveGroundAndPlatform(player, true);
+      resolveGroundAndPlatform(dummy, false);
+
+      dummy.vx *= 0.985;
+      if (Math.abs(dummy.vx) < 6) {
+        dummy.vx = 0;
+      }
+
+      player.x = clamp(player.x, -200, canvas.width + 200);
+      dummy.x = clamp(dummy.x, -260, canvas.width + 260);
+
+      ringOutCheck(dummy, onDummyRingOut);
+      ringOutCheck(player, onPlayerRingOut);
+
+      syncHud();
+    }
+
+    function drawBackground() {
+      ctx.fillStyle = "#0a1023";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = "rgba(151, 179, 255, 0.15)";
+      for (let i = 0; i < canvas.width; i += 48) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, canvas.height);
+        ctx.stroke();
+      }
+    }
+
+    function drawArena() {
+      ctx.fillStyle = "#42599b";
+      ctx.fillRect(0, WORLD.floorY, canvas.width, canvas.height - WORLD.floorY);
+
+      ctx.fillStyle = "#6c83c7";
+      ctx.fillRect(PLATFORM.x, PLATFORM.y, PLATFORM.width, PLATFORM.height);
+
+      ctx.fillStyle = "rgba(255, 110, 138, 0.35)";
+      ctx.fillRect(0, WORLD.ringOutY - 6, canvas.width, 6);
+    }
+
+    function drawFighter(entity, color, outline) {
+      ctx.fillStyle = color;
+      ctx.fillRect(entity.x, entity.y, entity.w, entity.h);
+      ctx.strokeStyle = outline;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(entity.x, entity.y, entity.w, entity.h);
+    }
+
+    function drawAttackHitbox() {
+      if (player.attackTimer <= 0) {
+        return;
+      }
+      const hb = getAttackHitbox();
+      ctx.fillStyle = "rgba(126, 193, 255, 0.35)";
+      ctx.fillRect(hb.x, hb.y, hb.w, hb.h);
+      ctx.strokeStyle = "rgba(126, 193, 255, 0.95)";
+      ctx.strokeRect(hb.x, hb.y, hb.w, hb.h);
+    }
+
+    function drawStatusText() {
+      if (!running) {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.55)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 44px Segoe UI";
+        ctx.textAlign = "center";
+        ctx.fillText("Defeat - Press Reset Match", canvas.width / 2, canvas.height / 2);
+      }
+    }
+
+    function draw() {
+      drawBackground();
+      drawArena();
+      drawAttackHitbox();
+      drawFighter(player, "#7ec1ff", "#d7ecff");
+      drawFighter(dummy, "#ff8ea4", "#ffd6df");
+      drawStatusText();
+    }
+
+    function syncHud() {
+      dummyDamageEl.textContent = `${Math.floor(dummy.damage)}%`;
+      playerLivesEl.textContent = String(player.lives);
+    }
+
+    function loop(timestamp) {
+      if (!lastTime) {
+        lastTime = timestamp;
+      }
+
+      const dt = Math.min(0.033, (timestamp - lastTime) / 1000);
+      lastTime = timestamp;
+
+      update(dt);
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    window.addEventListener("keydown", (event) => {
+      const key = event.key;
+      if (key === "a" || key === "A" || key === "ArrowLeft") {
+        keys.left = true;
+      }
+      if (key === "d" || key === "D" || key === "ArrowRight") {
+        keys.right = true;
+      }
+      if (key === "j" || key === "J") {
+        keys.attack = true;
+      }
+      if (key === "w" || key === "W" || key === "ArrowUp" || key === " ") {
+        event.preventDefault();
+        if (!keys.jump) {
+          doJump();
+        }
+        keys.jump = true;
+      }
+    });
+
+    window.addEventListener("keyup", (event) => {
+      const key = event.key;
+      if (key === "a" || key === "A" || key === "ArrowLeft") {
+        keys.left = false;
+      }
+      if (key === "d" || key === "D" || key === "ArrowRight") {
+        keys.right = false;
+      }
+      if (key === "j" || key === "J") {
+        keys.attack = false;
+      }
+      if (key === "w" || key === "W" || key === "ArrowUp" || key === " ") {
+        keys.jump = false;
+      }
+    });
+
+    resetBtn.addEventListener("click", () => {
+      resetMatch();
+    });
+
+    resetMatch();
+    requestAnimationFrame(loop);
+  </script>
+</body>
+</html>

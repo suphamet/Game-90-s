@@ -1,0 +1,94 @@
+﻿:root {
+  --bg: #f5f5f5;
+  --panel: #ffffff;
+  --text: #1f1f1f;
+  --border: #d6d6d6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  width: min(92vw, 480px);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 1rem;
+}
+
+.nav-link {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  color: #2362b2;
+  text-decoration: none;
+}
+
+.hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.75rem;
+}
+
+.hud h1 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.scoreboard {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+}
+
+#board {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  background: #fafafa;
+  display: block;
+}
+
+.actions,
+.controls,
+.controls-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actions {
+  margin-top: 0.75rem;
+}
+
+.controls {
+  margin-top: 0.5rem;
+  flex-direction: column;
+}
+
+button {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #f0f0f0;
+}
+
+.hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  color: #575757;
+}

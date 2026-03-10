@@ -1,0 +1,66 @@
+﻿:root {
+  --bg: #0f1115;
+  --panel: #171a21;
+  --text: #f4f6fa;
+  --muted: #aeb5c2;
+  --line: #2a3140;
+  --accent: #57a1ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at top, #1a1f2a 0%, #0f1115 45%, #0a0d12 100%);
+  color: var(--text);
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+.hub {
+  width: min(960px, 92vw);
+  padding: 1.5rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+header p {
+  margin: 0.4rem 0 1.2rem;
+  color: var(--muted);
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.game-card {
+  background: linear-gradient(165deg, #1b2230 0%, #151b27 100%);
+  border: 1px solid var(--line);
+  padding: 1rem;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.game-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.game-card h2 {
+  margin: 0 0 0.5rem;
+}
+
+.game-card p {
+  margin: 0;
+  color: var(--muted);
+}

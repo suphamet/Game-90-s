@@ -1,0 +1,53 @@
+﻿<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tetris</title>
+    <link rel="stylesheet" href="./tetris.css" />
+  </head>
+  <body>
+    <main class="tetris-app">
+      <a class="nav-link" href="./index.html">Back to Game Hub</a>
+
+      <section class="layout">
+        <div class="board-panel">
+          <header class="header-row">
+            <h1>Tetris</h1>
+            <div class="actions">
+              <button id="startBtn" type="button">Start Game</button>
+              <button id="resetBtn" type="button">Reset Game</button>
+            </div>
+          </header>
+
+          <canvas id="tetrisBoard" width="320" height="640" aria-label="Tetris board"></canvas>
+        </div>
+
+        <aside class="side-panel">
+          <section class="card">
+            <h2>Next Piece</h2>
+            <canvas id="nextBoard" width="128" height="128" aria-label="Next piece"></canvas>
+          </section>
+
+          <section class="card stats">
+            <h2>Stats</h2>
+            <p>Score: <strong id="scoreValue">0</strong></p>
+            <p>Lines: <strong id="linesValue">0</strong></p>
+            <p>Level: <strong id="levelValue">1</strong></p>
+            <p>Status: <strong id="statusValue">ready</strong></p>
+          </section>
+
+          <section class="card help">
+            <h2>Controls</h2>
+            <p>Left/Right: Move</p>
+            <p>Up: Rotate</p>
+            <p>Down: Soft Drop</p>
+            <p>Space: Hard Drop</p>
+          </section>
+        </aside>
+      </section>
+    </main>
+
+    <script src="./tetris.js"></script>
+  </body>
+</html>
