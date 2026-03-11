@@ -18,14 +18,29 @@ function initGame() {
 
     score = 0;
     timeLeft = time;
-    // เลือกคำศัพท์ตามภาษาที่เลือก
     currentWords = [...WORD_DATA[lang]].sort(() => Math.random() - 0.5);
     
     updateUI();
     overlay.style.display = 'none';
+    gameActive = false; // ยังไม่เริ่มเกมจริง
+
+    let countdown = 3;
+    wordEl.textContent = countdown;
+    
+    const countInterval = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+            wordEl.textContent = countdown;
+        } else {
+            clearInterval(countInterval);
+            startGameActual();
+        }
+    }, 1000);
+}
+
+function startGameActual() {
     gameActive = true;
     nextWord();
-    
     if(timerInterval) clearInterval(timerInterval);
     startTimer();
 }

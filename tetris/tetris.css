@@ -1,4 +1,4 @@
-﻿/* tetris.css */
+/* tetris.css */
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 :root {
@@ -97,7 +97,35 @@ body {
 
 /* ย่อขนาดสำหรับมือถือจอเล็ก */
 @media (max-width: 480px) {
-    .side-panel { display: none; } /* ซ่อนพาเนลข้างถ้าจอเล็กเกินไป */
+    .layout {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .side-panel {
+        display: flex;
+        width: 100%;
+        justify-content: space-around;
+        margin-bottom: 10px;
+    }
+
+    .card {
+        padding: 5px;
+        border-width: 2px;
+    }
+
+    .next-card { display: none; } /* ซ่อน Next Piece เพื่อประหยัดพื้นที่ */
+    
+    .stats {
+        display: flex;
+        gap: 20px;
+        background: none;
+        border: none;
+        box-shadow: none;
+    }
+
+    .stats p { margin: 0; font-size: 0.5rem; }
+
     h1 { font-size: 1rem; }
     .btn-ctrl { width: 70px; height: 70px; }
 }
