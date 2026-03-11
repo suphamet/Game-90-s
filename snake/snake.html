@@ -1,42 +1,42 @@
-﻿<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Snake Game</title>
-    <link rel="stylesheet" href="../styles.css" />
-  </head>
-  <body>
-    <main class="app">
-      <a class="nav-link" href="../index.html">Back to Game Hub</a>
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Snake Game - Retro</title>
+  <link rel="stylesheet" href="./snake.css" />
+</head>
+<body>
+  <main class="app">
+    <a class="nav-link" href="../index.html">Back to Game Hub</a>
 
-      <header class="hud">
-        <h1>Snake</h1>
-        <div class="scoreboard">
-          <span>Score: <strong id="score">0</strong></span>
-          <span>Status: <strong id="status">running</strong></span>
-        </div>
-      </header>
+    <header class="hud">
+      <h1>Snake</h1>
+      <div class="scoreboard">
+        <span>Score: <strong id="score">0</strong></span>
+        <span>Status: <strong id="status">running</strong></span>
+      </div>
+    </header>
 
-      <canvas id="board" width="400" height="400" aria-label="Snake board"></canvas>
+    <canvas id="board" width="400" height="400" aria-label="Snake board"></canvas>
 
-      <section class="actions">
-        <button id="pauseBtn" type="button">Pause</button>
-        <button id="restartBtn" type="button">Restart</button>
-      </section>
+    <section class="actions">
+      <button id="pauseBtn" type="button">Pause</button>
+      <button id="restartBtn" type="button">Restart</button>
+    </section>
 
-      <section class="controls" aria-label="On-screen controls">
-        <button type="button" data-dir="up">Up</button>
-        <div class="controls-row">
-          <button type="button" data-dir="left">Left</button>
-          <button type="button" data-dir="down">Down</button>
-          <button type="button" data-dir="right">Right</button>
-        </div>
-      </section>
+    <section class="controls" aria-label="On-screen controls">
+      <button type="button" data-dir="up">↑</button>
+      <div class="controls-row">
+        <button type="button" data-dir="left">←</button>
+        <button type="button" data-dir="down">↓</button>
+        <button type="button" data-dir="right">→</button>
+      </div>
+    </section>
 
-      <p class="hint">Use Arrow keys or WASD. Press Space to pause.</p>
-    </main>
+    <p class="hint">ใช้ปุ่มลูกศร หรือ WASD | ทัชปุ่มบนจอสำหรับมือถือ</p>
+  </main>
 
-    <script type="module" src="./snake.mjs"></script>
-  </body>
+  <script src="./snake.js"></script>
+</body>
 </html>

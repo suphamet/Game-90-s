@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Word Guessing - 90's Retro</title>
+    <link rel="stylesheet" href="./word-game.css">
+</head>
+<body>
+    <main class="game-container">
+        <div id="leftControl" class="touch-zone"><span>WRONG / SKIP</span></div>
+        <div id="rightControl" class="touch-zone"><span>CORRECT</span></div>
+
+        <header class="hud">
+            <div class="stat">TIME: <strong id="timer">0</strong></div>
+            <div class="stat">SCORE: <strong id="score">0</strong></div>
+        </header>
+
+        <section class="word-display">
+            <h1 id="currentWord">READY?</h1>
+        </section>
+
+        <div id="startOverlay" class="overlay">
+            <div class="dialog">
+                <h2>WORD GUESS 90's</h2>
+                
+                <div class="settings-group">
+                    <label>LANGUAGE:</label>
+                    <select id="langSelect">
+                        <option value="en">ENGLISH</option>
+                        <option value="th">ภาษาไทย</option>
+                    </select>
+                </div>
+
+                <div class="settings-group">
+                    <label>TIME (SEC):</label>
+                    <select id="timeSelect">
+                        <option value="30">30</option>
+                        <option value="60">60</option>
+                        <option value="90">90</option>
+                        <option value="120">120</option>
+                    </select>
+                </div>
+
+                <button id="startBtn">START GAME</button>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="./word-game.js"></script>
+</body>
+</html>

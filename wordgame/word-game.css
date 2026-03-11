@@ -1,0 +1,105 @@
+/* word-game.css */
+body {
+    margin: 0;
+    background-color: #000;
+    color: #33ff33;
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+    user-select: none;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    text-align: center;
+}
+
+.touch-zone {
+    position: absolute;
+    top: 0; width: 50%; height: 100%;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    background: rgba(51, 255, 51, 0.05);
+}
+.touch-zone:active { opacity: 1; }
+#leftControl { left: 0; border-right: 1px dashed #33ff33; }
+#rightControl { right: 0; }
+
+.hud {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    font-size: 1.5rem;
+    background: #1a1a1a;
+    border-bottom: 4px outset #444;
+}
+
+.word-display {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#currentWord {
+    font-size: clamp(2rem, 10vw, 5rem);
+    text-shadow: 0 0 10px #33ff33;
+}
+
+/* Overlay & Settings */
+.overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+.dialog {
+    border: 5px outset #444;
+    padding: 30px;
+    background: #222;
+    min-width: 280px;
+}
+
+.settings-group {
+    margin: 20px 0;
+    text-align: left;
+}
+
+.settings-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; }
+
+select {
+    width: 100%;
+    padding: 10px;
+    background: #000;
+    color: #33ff33;
+    border: 2px solid #33ff33;
+    font-family: inherit;
+}
+
+button {
+    width: 100%;
+    background: #444;
+    color: #fff;
+    border: 4px outset #666;
+    padding: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:active { border-style: inset; }
+
+@media (orientation: landscape) {
+    .settings-group { display: inline-block; width: 45%; margin: 10px; }
+}
