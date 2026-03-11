@@ -6,22 +6,22 @@ This repository contains a set of simple, classic games implemented using HTML, 
 
 | Game | HTML File | Logic File | Style File | Tests |
 |------|-----------|------------|------------|-------|
-| Snake | `snake.html` | `snake.mjs` / `snake-logic.mjs` | `styles.css` | `snake-logic.test.mjs` |
-| Tetris | `tetris.html` | `tetris.js` | `tetris.css` | - |
-| Breakout | `breakout.html` | (inline JS) | `styles.css` | - |
-| Pong | `pong.html` | (inline JS) | `styles.css` | - |
-| Minesweeper | `minesweeper.html` | (inline JS) | `styles.css` | - |
-| Pacman | `pacman.html` | (inline JS) | `styles.css` | - |
-| Platform Fighter | `platform-fighter.html` | (inline JS) | `styles.css` | - |
-| Space Invaders | `space-invaders.html` | (inline JS) | `styles.css` | - |
+| Snake | `snake/snake.html` | `snake/snake.mjs`<br>`snake/snake-logic.mjs` | shared `styles.css` | `snake/snake-logic.test.mjs` |
+| Tetris | `tetris/tetris.html` | `tetris/tetris.js` | `tetris/tetris.css` | - |
+| Breakout | `breakout/breakout.html` | (inline JS) | `breakout/breakout.css` | - |
+| Pong | `pong/pong.html` | (inline JS) | `pong/pong.css` | - |
+| Minesweeper | `minesweeper/minesweeper.html` | `minesweeper/minesweeper.js` | `minesweeper/minesweeper.css` | - |
+| Pacman | `pacman/pacman.html` | (inline JS) | `pacman/pacman.css` | - |
+| Platform Fighter | `platform-fighter/platform-fighter.html` | (inline JS) | `platform-fighter/platform-fighter.css` | - |
+| Space Invaders | `space-invaders/space-invaders.html` | `space-invaders/space-invaders.js` | `space-invaders/space-invaders.css` | - |
 
-*Note:* some games keep their logic directly in the HTML file, while others use separate module scripts.
+*Note:* each game now lives in its own folder. Most titles have dedicated `.js` and `.css` files pulled in by their HTML, while a few still contain inline scripts/styles.
 
 ## Getting Started
 
 1. **Open a game**
-   - Simply open any of the `*.html` files in your web browser (e.g., double-click or drag into a browser window).
-   - No server or build step is required.
+   - Navigate to the folder for a particular title and open its `*.html` file in a browser (e.g., `snake/snake.html`).
+   - No server or build step is required; everything runs client‑side.
 
 2. **Run tests (Node.js)**
    - If you wish to run the provided logic tests for Snake, ensure you have Node.js installed.
