@@ -1,53 +1,55 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="th">
-  <head>
+<head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tetris</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Tetris Retro</title>
     <link rel="stylesheet" href="./tetris.css" />
-  </head>
-  <body>
+</head>
+<body>
     <main class="tetris-app">
-      <a class="nav-link" href="../index.html">Back to Game Hub</a>
+        <a class="nav-link" href="../index.html">Back to Game Hub</a>
 
-      <section class="layout">
-        <div class="board-panel">
-          <header class="header-row">
-            <h1>Tetris</h1>
-            <div class="actions">
-              <button id="startBtn" type="button">Start Game</button>
-              <button id="resetBtn" type="button">Reset Game</button>
+        <section class="layout">
+            <div class="board-panel">
+                <header class="header-row">
+                    <h1>Tetris</h1>
+                    <div class="actions">
+                        <button id="startBtn" type="button">START</button>
+                        <button id="resetBtn" type="button">RESET</button>
+                    </div>
+                </header>
+                <div class="canvas-wrapper">
+                    <canvas id="tetrisBoard" width="320" height="640" aria-label="Tetris board"></canvas>
+                </div>
             </div>
-          </header>
 
-          <canvas id="tetrisBoard" width="320" height="640" aria-label="Tetris board"></canvas>
-        </div>
+            <aside class="side-panel">
+                <section class="card next-card">
+                    <h2>Next</h2>
+                    <canvas id="nextBoard" width="100" height="100"></canvas>
+                </section>
 
-        <aside class="side-panel">
-          <section class="card">
-            <h2>Next Piece</h2>
-            <canvas id="nextBoard" width="128" height="128" aria-label="Next piece"></canvas>
-          </section>
+                <section class="card stats">
+                    <p>Score: <strong id="scoreValue">0</strong></p>
+                    <p>Lines: <strong id="linesValue">0</strong></p>
+                    <p>Level: <strong id="levelValue">1</strong></p>
+                    <p id="statusValue" class="status-text">ready</p>
+                </section>
+            </aside>
+        </section>
 
-          <section class="card stats">
-            <h2>Stats</h2>
-            <p>Score: <strong id="scoreValue">0</strong></p>
-            <p>Lines: <strong id="linesValue">0</strong></p>
-            <p>Level: <strong id="levelValue">1</strong></p>
-            <p>Status: <strong id="statusValue">ready</strong></p>
-          </section>
-
-          <section class="card help">
-            <h2>Controls</h2>
-            <p>Left/Right: Move</p>
-            <p>Up: Rotate</p>
-            <p>Down: Soft Drop</p>
-            <p>Space: Hard Drop</p>
-          </section>
-        </aside>
-      </section>
+        <section class="mobile-controls">
+            <button class="btn-ctrl rotate" data-action="rotate">ROTATE</button>
+            <div class="d-pad">
+                <button class="btn-ctrl" data-action="left">LEFT</button>
+                <div class="vertical-group">
+                    <button class="btn-ctrl" data-action="down">DOWN</button>
+                </div>
+                <button class="btn-ctrl" data-action="right">RIGHT</button>
+            </div>
+        </section>
     </main>
-
     <script src="./tetris.js"></script>
-  </body>
+</body>
 </html>

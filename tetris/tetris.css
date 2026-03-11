@@ -1,116 +1,103 @@
 ﻿/* tetris.css */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-/* พื้นหลังและโทนสีรวมของยุค 90 */
+:root {
+    --bg-color: #0d0221;
+    --panel-color: #2a2a2a;
+    --neon-green: #33ff33;
+    --neon-blue: #00ffff;
+    --neon-pink: #ff00ff;
+    --btn-size: 75px; /* ขนาดปุ่มมาตรฐานมือถือ */
+}
+
 body {
-    background-color: #1a1a1a;
-    color: #33ff33; /* เขียวเรืองแสงแบบจอ Terminal */
-    font-family: 'Courier New', Courier, monospace;
+    background-color: var(--bg-color);
+    color: #fff;
+    font-family: 'Press Start 2P', cursive;
+    margin: 0;
+    padding: 10px;
     display: flex;
     justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
+    touch-action: none; /* ป้องกันการซูมขณะเล่น */
     text-transform: uppercase;
 }
 
-/* ตัวเครื่องเกม (Console Body) */
 .tetris-app {
-    background: #2d2d2d;
-    padding: 30px;
-    border: 10px outset #444; /* ขอบนูนพลาสติก */
-    border-radius: 12px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    background: var(--panel-color);
+    padding: 15px;
+    border: 4px solid #444;
+    box-shadow: 10px 10px 0 #000;
+    max-width: 500px;
+    width: 100%;
 }
 
-/* ส่วนของหน้าจอเกม (CRT Screen) */
-.board-panel {
-    position: relative;
-    display: inline-block;
+.layout {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
 }
 
 #tetrisBoard {
-    background-color: #050505;
-    border: 15px inset #111; /* ขอบจอลึกลงไป */
-    display: block;
-    image-rendering: pixelated; /* ให้พิกเซลคมชัดแบบ 8-bit */
-    box-shadow: inset 0 0 30px rgba(51, 255, 51, 0.1), 0 0 20px rgba(51, 255, 51, 0.2);
+    background: #000;
+    border: 4px solid #111;
+    width: 100%; /* ปรับตามจอ */
+    max-width: 240px;
+    height: auto;
+    image-rendering: pixelated;
 }
 
-/* เอฟเฟกต์เส้น Scanlines ทับหน้าจอ */
-.board-panel::after {
-    content: " ";
-    position: absolute;
-    top: 75px; /* ปรับให้พอดีกับตำแหน่งเริ่มของ Canvas */
-    left: 15px;
-    width: 320px;
-    height: 640px;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
-    background-size: 100% 4px;
-    pointer-events: none;
-    z-index: 10;
-}
-
-/* แผงควบคุมและสถิติข้างๆ */
-.side-panel {
+/* ปุ่มควบคุมมือถือ */
+.mobile-controls {
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-left: 20px;
+    align-items: center;
+    gap: 10px;
 }
 
-.card {
-    background: #1a1a1a;
-    border: 4px inset #333;
-    padding: 15px;
-    box-shadow: 3px 3px 0px #000;
+.d-pad {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-h1 {
-    font-size: 2rem;
-    margin: 0 0 15px 0;
-    color: #ffcc00; /* สีเหลืองทองแบบโลโก้เกมเก่า */
-    text-shadow: 3px 3px 0px #000;
-    letter-spacing: 4px;
+.vertical-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-/* ปุ่มกดสไตล์ Retro (Beveled) */
-button {
-    background: #444;
-    color: #eee;
+.btn-ctrl {
+    width: var(--btn-size);
+    height: var(--btn-size);
+    background: #333;
     border: 4px outset #666;
-    padding: 12px 20px;
+    color: #fff;
     font-family: inherit;
-    font-weight: bold;
+    font-size: 0.5rem;
     cursor: pointer;
-    margin-bottom: 10px;
-    transition: 0.1s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-button:hover {
-    color: #33ff33;
-    background: #555;
-}
-
-button:active {
+.btn-ctrl:active {
+    background: var(--neon-blue);
+    color: #000;
     border-style: inset;
-    transform: translateY(2px);
 }
 
-/* ตัวเลข Digital สีแดง */
-strong {
-    color: #ff3333;
-    font-size: 1.4rem;
-    text-shadow: 0 0 8px rgba(255, 51, 51, 0.6);
+.rotate {
+    width: 160px; /* ปุ่มหมุนกว้างหน่อย */
+    border-radius: 40px;
+    background: #444;
 }
 
-.nav-link {
-    color: #666;
-    text-decoration: none;
-    font-size: 0.8rem;
-    margin-bottom: 20px;
-    display: inline-block;
-}
+.status-text { color: var(--neon-green); font-size: 0.6rem; }
 
-.nav-link:hover {
-    color: #ffcc00;
+/* ย่อขนาดสำหรับมือถือจอเล็ก */
+@media (max-width: 480px) {
+    .side-panel { display: none; } /* ซ่อนพาเนลข้างถ้าจอเล็กเกินไป */
+    h1 { font-size: 1rem; }
+    .btn-ctrl { width: 70px; height: 70px; }
 }

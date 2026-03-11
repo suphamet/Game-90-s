@@ -1,13 +1,11 @@
 <!doctype html>
 <html lang="th">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Game Hub</title>
+  <title>Arcade Game Hub</title>
   <link rel="stylesheet" href="./launcher.css" />
 </head>
-
 <body>
   <main class="hub">
     <header>
@@ -17,46 +15,76 @@
 
     <section class="game-grid">
       <a class="game-card" href="./snake/snake.html">
+        <span class="badge-mobile">MOBILE READY</span>
         <h2>Snake</h2>
-        <p>เกมงูคลาสสิก เก็บอาหารและหลบการชน</p>
+        <p>เกมงูคลาสสิก พร้อมระบบ D-Pad ขนาดใหญ่</p>
       </a>
 
-      <a class="game-card" href="./tetris/tetris.html">
-        <h2>Tetris</h2>
-        <p>เรียงบล็อก เคลียร์ไลน์ และไต่เลเวล</p>
+      <a class="game-card" href="./wordgame/word-game.html">
+        <span class="badge-mobile">MOBILE READY</span>
+        <h2>Word Guessing</h2>
+        <p>ทายคำศัพท์ภาษาไทย-อังกฤษ เลือกเวลาได้</p>
       </a>
 
       <a class="game-card" href="./minesweeper/minesweeper.html">
         <h2>Minesweeper</h2>
-        <p>เปิดช่อง คำนวณตัวเลขรอบระเบิด และปักธง</p>
+        <p>คำนวณตัวเลขรอบระเบิดสไตล์ Windows 95</p>
       </a>
 
-      <a class="game-card" href="./space-invaders/space-invaders.html">
+      <a class="game-card desktop-only" href="./tetris/tetris.html">
+        <h2>Tetris</h2>
+        <p>เรียงบล็อก เคลียร์ไลน์ และไต่เลเวล</p>
+      </a>
+
+      <a class="game-card desktop-only" href="./space-invaders/space-invaders.html">
         <h2>Space Invaders</h2>
-        <p>ขยับยาน ยิงเอเลี่ยน ทำคะแนน และทำลาย High Score</p>
+        <p>ขยับยาน ยิงเอเลี่ยน (ต้องใช้คีย์บอร์ด)</p>
       </a>
 
-      <a class="game-card" href="./breakout/breakout.html">
+      <a class="game-card desktop-only" href="./breakout/breakout.html">
         <h2>Breakout</h2>
-        <p>เดาะบอลทำลายอิฐ เก็บชีวิต และควบคุมจังหวะ</p>
+        <p>เดาะบอลทำลายอิฐ ควบคุมด้วยเมาส์</p>
       </a>
 
-      <a class="game-card" href="./pong/pong.html">
+      <a class="game-card desktop-only" href="./pong/pong.html">
         <h2>Pong</h2>
-        <p>โต้ลูกกับ CPU สไตล์ Retro Neon ใครถึง 5 ก่อนชนะ</p>
+        <p>โต้ลูกกับ CPU สไตล์ Retro Neon</p>
       </a>
 
-      <a class="game-card" href="./pacman/pacman.html">
+      <a class="game-card desktop-only" href="./pacman/pacman.html">
         <h2>Pac-Man</h2>
-        <p>เก็บจุดในเขาวงกต กิน Power Pellet และหนีผี</p>
-      </a>
-      
-      <a class="game-card" href="./wordgame/word-game.html">
-        <h2>Word Guessing</h2>
-        <p>ทายคำศัพท์ให้ทันเวลา</p>
+        <p>เก็บจุดในเขาวงกต และหนีผี</p>
       </a>
     </section>
   </main>
-</body>
 
+  <script>
+    function checkDevice() {
+      // ตรวจจับขนาดจอที่เล็กกว่า 768px (ขนาดแท็บเล็ต/มือถือ)
+      const isMobile = window.innerWidth <= 768;
+      const desktopGames = document.querySelectorAll('.desktop-only');
+
+      desktopGames.forEach(game => {
+        if (isMobile) {
+          game.classList.add('not-supported');
+          const desc = game.querySelector('p');
+          if (!desc.dataset.original) {
+            desc.dataset.original = desc.textContent;
+          }
+          desc.textContent = "❌ ไม่รองรับบนมือถือ (ต้องใช้คีย์บอร์ด/เมาส์)";
+        } else {
+          game.classList.remove('not-supported');
+          const desc = game.querySelector('p');
+          if (desc.dataset.original) {
+            desc.textContent = desc.dataset.original;
+          }
+        }
+      });
+    }
+
+    // ทำงานเมื่อโหลดหน้าเว็บและเมื่อเปลี่ยนขนาดจอ
+    window.addEventListener('resize', checkDevice);
+    window.addEventListener('DOMContentLoaded', checkDevice);
+  </script>
+</body>
 </html>

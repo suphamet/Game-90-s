@@ -1,4 +1,4 @@
-﻿(() => {
+(() => {
   const BOARD_COLS = 10;
   const BOARD_ROWS = 20;
   const BLOCK_SIZE = 32;
@@ -396,9 +396,9 @@
     drawCurrentPiece();
     drawNextPiece();
 
-    scoreEl.textContent = String(score);
-    linesEl.textContent = String(lines);
-    levelEl.textContent = String(level);
+    if (scoreEl) scoreEl.textContent = String(score);
+    if (linesEl) linesEl.textContent = String(lines);
+    if (levelEl) levelEl.textContent = String(level);
 
     if (!running && !gameOver) {
       statusEl.textContent = "ready";
@@ -490,4 +490,28 @@
   window.addEventListener("keydown", handleKeydown);
 
   resetState();
+
+  // เพิ่มไว้ด้านล่างสุดของไฟล์ tetris.js (ภายในฟังก์ชันหลัก)
+
+function handleMobileInput(action) {
+    if (!running && action !== 'start') return;
+
+    switch (action) {
+        case 'left': moveCurrentPiece(-1, 0); break;
+        case 'right': moveCurrentPiece(1, 0); break;
+        case 'down': softDrop(); break;
+        case 'up': hardDrop(); break; // Hard Drop
+        case 'rotate': rotateCurrentPiece(); break;
+    }
+    draw();
+}
+
+// ผูกเหตุการณ์ Pointer
+document.querySelectorAll('.btn-ctrl').forEach(btn => {
+    btn.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        const action = btn.dataset.action;
+        handleMobileInput(action);
+    });
+});
 })();
