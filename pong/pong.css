@@ -1,0 +1,118 @@
+/* pong.css */
+
+/* สไตล์พื้นหลังสีดำสนิทเพื่อขับเน้นแสงนีออน */
+body {
+    background-color: #000;
+    color: #0ff; /* สี Cyan นีออน */
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+/* ตัวเครื่องเล่นเกม */
+.app {
+    text-align: center;
+    padding: 20px;
+}
+
+/* หัวข้อ PONG แบบเรืองแสง */
+h1 {
+    font-size: 3rem;
+    margin: 0;
+    color: #fff;
+    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 40px #0ff;
+    letter-spacing: 10px;
+}
+
+.status {
+    color: #0ff;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* หน้าจอเกม (CRT Overlay Effect) */
+#pong {
+    border: 4px solid #fff;
+    box-shadow: 0 0 15px #0ff, inset 0 0 10px #0ff;
+    background-color: #000;
+    display: block;
+    margin: 0 auto;
+    image-rendering: pixelated;
+}
+
+/* เส้น Scanlines จำลองจอทีวีรุ่นเก่า */
+.app {
+    position: relative;
+}
+
+.app::after {
+    content: " ";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+    background-size: 100% 4px;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+/* Overlay เมื่อจบเกม */
+.overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: none; /* เปิดด้วย JS */
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+
+.dialog {
+    border: 5px solid #fff;
+    padding: 40px;
+    background: #000;
+    box-shadow: 0 0 30px #f0f; /* สีชมพูนีออน */
+    text-align: center;
+}
+
+.dialog h2 {
+    color: #f0f;
+    font-size: 3rem;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px #f0f;
+}
+
+/* ปุ่มกดสไตล์ Arcade */
+button {
+    background: transparent;
+    color: #fff;
+    border: 3px solid #fff;
+    padding: 15px 30px;
+    font-family: inherit;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #fff;
+    color: #000;
+    box-shadow: 0 0 20px #fff;
+}
+
+.nav-link {
+    color: #444;
+    text-decoration: none;
+    font-size: 0.8rem;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.nav-link:hover {
+    color: #0ff;
+}

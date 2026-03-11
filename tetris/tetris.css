@@ -1,174 +1,116 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+﻿/* tetris.css */
 
-:root {
-  --neon-pink: #ff00ff;
-  --neon-blue: #00ffff;
-  --neon-purple: #7000ff;
-  --neon-yellow: #ffff00;
-  --panel-bg: #120458; /* สีน้ำเงินเข้มยุค 90s */
-  --black: #000;
-}
-
+/* พื้นหลังและโทนสีรวมของยุค 90 */
 body {
-  background-color: #050110;
-  color: #fff;
-  font-family: 'Press Start 2P', cursive;
-  margin: 0;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  text-transform: uppercase;
+    background-color: #1a1a1a;
+    color: #33ff33; /* เขียวเรืองแสงแบบจอ Terminal */
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    text-transform: uppercase;
 }
 
+/* ตัวเครื่องเกม (Console Body) */
 .tetris-app {
-  max-width: 900px;
-  width: 100%;
+    background: #2d2d2d;
+    padding: 30px;
+    border: 10px outset #444; /* ขอบนูนพลาสติก */
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
 }
 
-.nav-link {
-  color: var(--neon-yellow);
-  text-decoration: none;
-  font-size: 0.7rem;
-  margin-bottom: 20px;
-  display: inline-block;
-  border-bottom: 2px solid transparent;
-}
-
-.nav-link:hover {
-  border-bottom-color: var(--neon-yellow);
-  animation: blink 0.5s infinite;
-}
-
-/* Layout Grid */
-.layout {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 30px;
-}
-
-/* Main Board Section */
+/* ส่วนของหน้าจอเกม (CRT Screen) */
 .board-panel {
-  background: var(--panel-bg);
-  padding: 20px;
-  border: 4px solid var(--neon-blue);
-  box-shadow: 0 0 15px var(--neon-blue), inset 0 0 10px var(--neon-blue);
-}
-
-.header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-h1 {
-  font-size: 1.8rem;
-  color: var(--neon-pink);
-  text-shadow: 3px 3px 0 #000;
-  margin: 0;
+    position: relative;
+    display: inline-block;
 }
 
 #tetrisBoard {
-  background-color: var(--black);
-  border: 4px solid #333;
-  display: block;
-  margin: 0 auto;
-  box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.2);
+    background-color: #050505;
+    border: 15px inset #111; /* ขอบจอลึกลงไป */
+    display: block;
+    image-rendering: pixelated; /* ให้พิกเซลคมชัดแบบ 8-bit */
+    box-shadow: inset 0 0 30px rgba(51, 255, 51, 0.1), 0 0 20px rgba(51, 255, 51, 0.2);
 }
 
-/* Side Panel & Cards */
+/* เอฟเฟกต์เส้น Scanlines ทับหน้าจอ */
+.board-panel::after {
+    content: " ";
+    position: absolute;
+    top: 75px; /* ปรับให้พอดีกับตำแหน่งเริ่มของ Canvas */
+    left: 15px;
+    width: 320px;
+    height: 640px;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* แผงควบคุมและสถิติข้างๆ */
 .side-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-left: 20px;
 }
 
 .card {
-  background: #1a1a1a;
-  border: 3px solid var(--neon-purple);
-  padding: 15px;
-  box-shadow: 5px 5px 0px #000;
+    background: #1a1a1a;
+    border: 4px inset #333;
+    padding: 15px;
+    box-shadow: 3px 3px 0px #000;
 }
 
-.card h2 {
-  font-size: 0.8rem;
-  color: var(--neon-blue);
-  margin-top: 0;
-  border-bottom: 2px solid var(--neon-purple);
-  padding-bottom: 8px;
+h1 {
+    font-size: 2rem;
+    margin: 0 0 15px 0;
+    color: #ffcc00; /* สีเหลืองทองแบบโลโก้เกมเก่า */
+    text-shadow: 3px 3px 0px #000;
+    letter-spacing: 4px;
 }
 
-#nextBoard {
-  background: var(--black);
-  display: block;
-  margin: 10px auto;
-  border: 2px solid #333;
-}
-
-.stats p {
-  font-size: 0.65rem;
-  margin: 12px 0;
-  display: flex;
-  justify-content: space-between;
-}
-
-.stats strong {
-  color: var(--neon-yellow);
-}
-
-.help p {
-  font-size: 0.5rem;
-  line-height: 1.8;
-  color: #aaa;
-}
-
-/* Buttons */
+/* ปุ่มกดสไตล์ Retro (Beveled) */
 button {
-  font-family: 'Press Start 2P', cursive;
-  padding: 10px 15px;
-  font-size: 0.6rem;
-  cursor: pointer;
-  border: 3px solid;
-  transition: transform 0.1s;
+    background: #444;
+    color: #eee;
+    border: 4px outset #666;
+    padding: 12px 20px;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: 0.1s;
 }
 
-#startBtn {
-  background: var(--neon-pink);
-  color: white;
-  border-color: #ff77ff #880088 #880088 #ff77ff;
-}
-
-#resetBtn {
-  background: #444;
-  color: #ccc;
-  border-color: #666 #222 #222 #666;
+button:hover {
+    color: #33ff33;
+    background: #555;
 }
 
 button:active {
-  transform: scale(0.95);
+    border-style: inset;
+    transform: translateY(2px);
 }
 
-/* CRT Effect Scanlines */
-.tetris-app::before {
-  content: "";
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
-  background-size: 100% 4px;
-  z-index: 100;
-  pointer-events: none;
+/* ตัวเลข Digital สีแดง */
+strong {
+    color: #ff3333;
+    font-size: 1.4rem;
+    text-shadow: 0 0 8px rgba(255, 51, 51, 0.6);
 }
 
-@keyframes blink {
-  50% { opacity: 0; }
+.nav-link {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.8rem;
+    margin-bottom: 20px;
+    display: inline-block;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-  .side-panel {
-    order: -1;
-  }
+.nav-link:hover {
+    color: #ffcc00;
 }
